@@ -28,31 +28,32 @@ subplot(2,2,4)
 plot(xaxis, a);
 
 %%
-% Send 'Signal' through Pluto
+% Send 'Signal' parameter
 CenterFrequency = 800e6;
-BasebandSampleRate = 1e6;
+BasebandSampleRate = 1e5;
 txPluto = sdrtx('Pluto', 'RadioID', 'usb:0', ...
     'CenterFrequency', CenterFrequency, ...
     'BasebandSampleRate', BasebandSampleRate, ...
     'ChannelMapping',1, ...
     'Gain',0);
-%%
-i=3;
-while i
-    txPluto(Signal);
-    i=i-1;
-end
 
-disp('send finish');
-
-% receive Signal
+% receive Signal parameter
 rxPluto = sdrrx('Pluto','RadioID','usb:0', ...
     'CenterFrequency', CenterFrequency,...
     'BasebandSampleRate', BasebandSampleRate, ...
     'ChannelMapping',1, ...
     'OutputDataType','double', ...
-    'SamplesPerFrame',1e6, ...
+    'SamplesPerFrame',length(Signal), ...
     'Gain',30);
+
+%%
+i=1;
+while i
+    txPluto(Signal);
+    i=i-1;
+end
+
+% disp('send finish');
 
 % data: the Signal received
 % datavalid: if data if valid or not
@@ -68,7 +69,7 @@ plot(data);
 
 subplot(2,2,2)
 xaxis = (0:length(rd)-1)./Fs;
-plot(xaxis, rd); axis([1000 1020 -1 1]);
+plot(xaxis, rd); axis([0 20 -1 1]);
 
 freqSig = abs(fft(rd, N));
 freq = Fs*(0:N-1)/N;
@@ -90,7 +91,7 @@ Wn = f*2/Fs;
 y = filter(butter1, butter2, rd);
 subplot(2,2,2)
 xaxis = (0:length(rd)-1)./Fs;
-plot(xaxis, y); axis([1000 1020 -1 1]);
+plot(xaxis, y); axis([0 20 -1 1]);
 
 freqSig = abs(fft(y, N));
 freq = Fs*(0:N-1)/N;

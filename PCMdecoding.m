@@ -1,4 +1,4 @@
-function s=PCMdecoding(encode, max)
+function s=PCMdecoding(encode)
     encode=(reshape(encode',8,length(encode)/8))';
     l=size(encode,1);
     a=[0,16,32,64,128,256,512,1024];
@@ -19,5 +19,5 @@ function s=PCMdecoding(encode, max)
             s(i)=k(i);
         end
     end
-    s = s*max;
+%     s = s*maxim;
 end
